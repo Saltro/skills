@@ -1,0 +1,14 @@
+{
+  "notion": {
+    "mode": "ntn",
+    "cli": "ntn",
+    "taxonomy_data_source": "提供你的 Notion 打标分类体系 data source id/name",
+    "capture_data_source": "提供你的 Notion 内容收录 data source id/name"
+  },
+  "workspace_root": "~/.config/alma/knowledge-capture/library",
+  "output": {
+    "target": "notion",
+    "save_original_md": true,
+    "save_summary_md": true
+  }
+}
