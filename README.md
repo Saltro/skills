@@ -1,3 +1,3 @@
-# ai-native-thinking
+# Saltro Ping own's SKILLs
 
-Guide the agent to design products, systems, or features using AI-native thinking.
+- `ai-native-thinking`: Guide the agent to design products, systems, or features using AI-native thinking.
