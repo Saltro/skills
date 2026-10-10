@@ -1,0 +1,10 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-10-09T20:35:52+0800	baseline	knowledge-capture	-	69.4	baseline	-	资源路径漂移；带 skill 对 3 个测试均优于盲基线	full_test
+2026-10-09T20:35:52+0800	baseline	ai-native-thinking	-	71.3	baseline	-	覆盖完整但失败分支和显性检查点不足	full_test
+2026-10-09T20:35:52+0800	baseline	thinking-methods	-	71.9	baseline	-	分析可审计性提升但相对强基线明显膨胀	full_test
+2026-10-10T11:48:56+0800	paired	knowledge-capture	69.4	3-0 better	keep	P0 execution integrity	消除跨安装资源串版；安装、建表、taxonomy 与首次写回改为独立显性批准	paired
+2026-10-10T12:13:47+0800	paired	ai-native-thinking	71.3	3-0 better	keep	failure recovery	新增三段式恢复矩阵、高风险运行时检查点与紧凑输出约束	paired
+2026-10-10T14:16:36+0800	paired	thinking-methods	71.9	3-0 better	keep	effectiveness	改为最少必要框架与结论优先输出；补充失败分支和反模式黑名单	paired
+2026-10-10T14:22:54+0800	validation	knowledge-capture	3-0 better	pass	validated	regression	final regression prompt kc-3 passed	full_test
+2026-10-10T14:22:54+0800	validation	ai-native-thinking	3-0 better	pass	validated	regression	final regression prompt ant-3 passed	full_test
+2026-10-10T14:22:54+0800	validation	thinking-methods	3-0 better	pass	validated	regression	final regression prompt tm-1 passed	full_test

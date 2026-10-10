@@ -30,13 +30,15 @@ Use Notion CLI `ntn` for all Notion operations. Do not use direct Notion REST AP
 
 For database-style operations, set `NOTION_API_VERSION=2022-06-28` when calling `ntn api`. This keeps Notion database/page APIs stable and avoids newer data-source schema differences.
 
-If `ntn` is not installed, install it:
+If `ntn` is not installed, show the installation command but do not run it automatically:
 
 ```bash
 curl -fsSL https://ntn.dev | bash
 ```
 
-Then ask the user to complete login:
+**🔴 CHECKPOINT · STOP:** explain that this downloads and executes an external installer, then wait for the user to approve running it or install `ntn` themselves.
+
+After installation, ask the user to complete login:
 
 ```bash
 ntn login
@@ -59,7 +61,9 @@ Required user-provided fields on first use if Alma has not created the standard 
 - `taxonomy_data_source`: Notion data source/database/table for taxonomy/classification system.
 - `capture_data_source`: Notion data source/database/table where processed content records should be written.
 
-Preferred path: create two standard Notion data sources named `Alma Knowledge Taxonomy` and `Alma Knowledge Capture` using `references/notion-schema.md`, then persist their IDs. If the user provides existing tables that do not match the standard schema, skip Notion taxonomy/writeback and continue local Markdown only.
+Preferred path: create two standard Notion data sources named `Alma Knowledge Taxonomy` and `Alma Knowledge Capture` using `references/notion-schema.md`, then persist their IDs. Before creating them, show the proposed names and required properties.
+
+**🔴 CHECKPOINT · STOP:** wait for explicit approval before creating either data source or persisting newly created IDs. If the user provides existing tables that do not match the standard schema, skip Notion taxonomy/writeback and continue local Markdown only.
 
 Optional fields:
 
@@ -96,19 +100,34 @@ Do not ask again once the values are stored, unless the config is missing, inval
 
 ## References to read before execution
 
-Always read these files before running the workflow:
+Resolve all paths below relative to the directory containing this `SKILL.md`. This skill directory is the only source of truth. Do not read a same-named installed copy from `~/.config`, `~/.claude`, or another skill directory.
 
-- `/Users/bytedance/.config/alma/skills/knowledge-capture/references/notion-schema.md`
-- `/Users/bytedance/.config/alma/skills/knowledge-capture/references/platform-fetching.md`
-- `/Users/bytedance/.config/alma/skills/knowledge-capture/references/multimodal-extraction.md`
-- `/Users/bytedance/.config/alma/skills/knowledge-capture/references/notion-taxonomy.md`
-- `/Users/bytedance/.config/alma/skills/knowledge-capture/references/summary-methods.md`
-- `/Users/bytedance/.config/alma/skills/knowledge-capture/references/notion-writeback.md`
+Always read:
+
+- `references/notion-schema.md`
+- `references/platform-fetching.md`
+- `references/multimodal-extraction.md`
+- `references/notion-taxonomy.md`
+- `references/summary-methods.md`
+- `references/notion-writeback.md`
 
 Use templates:
 
-- `/Users/bytedance/.config/alma/skills/knowledge-capture/templates/original.md`
-- `/Users/bytedance/.config/alma/skills/knowledge-capture/templates/summary.md`
+- `templates/original.md`
+- `templates/summary.md`
+
+If a required reference or template is missing, stop the affected operation, report the missing relative path, and preserve any local capture files already created. Do not silently substitute a file from another installation.
+
+## External-change checkpoints
+
+The following actions always require a preview and explicit approval:
+
+1. Installing or upgrading `ntn`.
+2. Creating or changing Notion data sources or their properties.
+3. Adding or changing taxonomy labels.
+4. Writing the first capture record to a target data source in the current run.
+
+Approval for one action does not authorize the others. Read-only Notion inspection and local Markdown generation may continue without approval.
 
 ## Main workflow
 
@@ -126,6 +145,8 @@ If missing, install:
 ```bash
 curl -fsSL https://ntn.dev | bash
 ```
+
+**🔴 CHECKPOINT · STOP:** do not run the installer until the user explicitly approves.
 
 If not logged in or requests fail due to auth, ask the user to run:
 
@@ -150,7 +171,7 @@ taxonomy_data_source
 capture_data_source
 ```
 
-Then persist those values to config.
+Show the config values and destination path before persisting them. If the values refer to newly created data sources, use the first-run checkpoint above before writing the config.
 
 ### 2. Normalize input
 
@@ -270,6 +291,10 @@ Classification output shape:
 
 If new labels are needed, update taxonomy data source first through `ntn` and log the reason in the local summary.
 
+Before the update, show each proposed `{dimension, label, reason}` entry.
+
+**🔴 CHECKPOINT · STOP:** wait for explicit approval before changing the taxonomy. If approval is denied, keep the proposed labels in `summary.md`, classify locally, and continue without mutating Notion.
+
 ### 9. Generate summary Markdown
 
 Use `references/summary-methods.md`.
@@ -296,6 +321,10 @@ Required sections:
 ### 10. Write back to Notion
 
 Use `references/notion-writeback.md`.
+
+Before the first write to the configured `capture_data_source` in the current run, show a preview containing the target data source, title, source URL, processing status, tags, and fields that will be written.
+
+**🔴 CHECKPOINT · STOP:** wait for explicit approval before creating the record. If approval is denied, keep `original.md` and `summary.md`, report that Notion writeback was skipped, and do not create `notion-writeback-error.md`.
 
 Write one capture record to `capture_data_source` via `ntn`, containing:
 

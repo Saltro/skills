@@ -92,6 +92,16 @@ Design must include:
 
 Avoid designs that require perfect first-pass accuracy.
 
+Encode recovery paths explicitly:
+
+| Trigger | First response | If still unresolved |
+|---|---|---|
+| Intent is ambiguous or corrected | Show the current interpretation, preserve confirmed facts, and ask one blocking question | Offer bounded paths or escalate conflicting evidence; do not silently choose |
+| Evidence is missing | Mark uncertainty and return a useful partial result | Stop when continuing would mislead |
+| A tool fails before any side effect | Retry only when safe and bounded | Switch tool or hand off the error and preserved state |
+| A write times out or has unknown status | Inspect the external system before retrying | Escalate unresolved state; never repeat blindly |
+| A workflow partially succeeds | Preserve completed steps and resume at failure | Offer compensation or human handoff; do not restart everything |
+
 ---
 
 ## Step 4: Make Data Adaptive, Not Static
@@ -129,6 +139,22 @@ Choose how much freedom the agent has:
 
 Explicitly state where and why constraints exist.
 
+### Mandatory checkpoint for consequential actions
+
+Designs that can send consequential external communications, move money, create legal commitments, delete data, change access, publish content, or cause another hard-to-reverse effect must include this checkpoint. A communication is consequential when it creates a commitment, exposes sensitive information, or materially affects a third party.
+
+**🔴 CHECKPOINT · STOP**
+
+Before execution, show:
+
+1. Exact action and target.
+2. Data, amount, or permissions involved.
+3. Impact and reversibility.
+4. Recovery or compensation path.
+5. Required approver.
+
+Do not treat model confidence as authorization. If confirmation is unavailable, keep the action as a draft or recommendation and continue only with reversible work.
+
 ---
 
 ## Output Expectations
@@ -140,5 +166,7 @@ When this skill is applied, the final output should include:
 - The role of the agent in the system
 - How errors and corrections are handled
 - What parts of the system are expected to evolve over time
+
+Default to a compact answer. State the AI-native verdict once, combine overlapping sections, and include only the recovery branches and checkpoints that materially affect the proposed design.
 
 Avoid presenting UI-first or database-first solutions unless explicitly required.
